@@ -7,10 +7,16 @@
     <title>dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4">
     </script>
+    <link rel="stylesheet" href="style/font.css">
+    <style>
+        .font-DMSans {
+            font-family: DMSans;
+        }
+    </style>
 </head>
 
-<body>
-    <header class="bg-linear-to-r from-purple-700 to-purple-500 ">
+<body style="font-family: poppins;">
+    <header class="bg-purple-700 ">
         <div class="flex justify-between py-2 px-8">
             <h1 class="">Hi There,
                 <br>Get ready to start your activities!
@@ -24,12 +30,12 @@
     <main class="flex flex-col h-dvh px-8 py-16 gap-8">
         <nav class="flex justify-between">
             <div class="flex gap-4">
-                <button class="bg-purple-500 rounded-md p-2 text-white">Today</button>
-                <button class="bg-purple-500 rounded-md p-2 text-white">Completed</button>
+                <button class="bg-yellow-500 rounded-md p-2 text-white">Today</button>
+                <button class="bg-yellow-500 rounded-md p-2 text-white">Completed</button>
                 <input class="border rounded-md" type="text" placeholder="Search To Do">
             </div>
             <div class="">
-                <button class="bg-purple-500 rounded-md p-2 text-white">Add</button>
+                <button id="add" class="bg-yellow-500 rounded-md p-2 text-white cursor-pointer">Add</button>
             </div>
         </nav>
         <article class="">
@@ -37,10 +43,28 @@
             <section class="grid grid-cols-4 shadow-xs shadow-purple-500/20 p-4 gap-5 mb-8">
                 <div class="">
                     <input type="checkbox" class="w-5 h-5 blue-500">
+                    <div class=" flex flex-col border-1 rounded-md p-2 ">
+                        <div class="flex justify-between items-center mb-4">
+                            <p>Werkudoro</p>
+                            <p class="bg-red-700 px-2">High</p>
+                        </div>
+                        <div class="flex flex-col py-2 gap-4">
+                            <p>07.00 - 08.00</p>
+                            <label for="">To Do</label>
+                            <input class="border rounded-md
+                        p-4" type="text">
+                        </div>
+                        <div class="flex flex-col gap-2 pt-2">
+                            <button class="border-1  bg-red-700 rounded-md text-white w-full">Delete</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="">
+                    <input type="checkbox" class="w-5 h-5 blue-500">
                     <div class="flex flex-col border-1 rounded-md p-2 ">
                         <div class="flex justify-between items-center mb-4">
                             <p>Werkudoro</p>
-                            <p class="bg-green-500 px-2">High</p>
+                            <p class="bg-yellow-500 px-2">Medium</p>
                         </div>
                         <div class="flex flex-col py-2 gap-4">
                             <p>07.00 - 08.00</p>
@@ -58,7 +82,7 @@
                     <div class="flex flex-col border-1 rounded-md p-2 ">
                         <div class="flex justify-between items-center mb-4">
                             <p>Werkudoro</p>
-                            <p class="bg-green-500 px-2">High</p>
+                            <p class="bg-green-500 px-2">Low</p>
                         </div>
                         <div class="flex flex-col py-2 gap-4">
                             <p>07.00 - 08.00</p>
@@ -115,8 +139,63 @@
 
             </section>
         </article>
-    </main>
 
+    </main>
+    <div id="modal" class="bg-[rgba(0,0,0,0.8)] flex justify-center items-center w-full h-screen absolute top-0 hidden">
+        <div class="bg-white w-2xl py-4 px-6 rounded-sm">
+            <div class="flex justify-between items-center pb-6">
+                <p class="text-2xl font-semibold">Input Your To Do</p>
+                <svg id="closeModal" width="30px" height="30px" viewBox="0 0 24 24" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                    <g id="SVGRepo_iconCarrier">
+                        <g id="style=fill">
+                            <g id="close">
+                                <path id="Subtract" fill-rule="evenodd" clip-rule="evenodd"
+                                    d="M1.25 7.25C1.25 3.93629 3.93629 1.25 7.25 1.25L16.75 1.25C20.0637 1.25 22.75 3.93629 22.75 7.25L22.75 16.75C22.75 20.0637 20.0637 22.75 16.75 22.75L7.25 22.75C3.93629 22.75 1.25 20.0637 1.25 16.75L1.25 7.25ZM7.18298 7.18298C7.42696 6.939 7.82253 6.939 8.06651 7.18298L12 11.1165L15.9335 7.18298C16.1775 6.939 16.573 6.93901 16.817 7.18299C17.061 7.42697 17.061 7.82254 16.817 8.06652L12.8835 12L16.817 15.9335C17.061 16.1775 17.061 16.573 16.817 16.817C16.573 17.061 16.1775 17.061 15.9335 16.817L12 12.8835L8.0665 16.817C7.82252 17.061 7.42695 17.061 7.18298 16.817C6.939 16.573 6.93901 16.1775 7.18299 15.9335L11.1165 12L7.18298 8.06651C6.93901 7.82253 6.93901 7.42696 7.18298 7.18298Z"
+                                    fill="#000000"></path>
+                            </g>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+
+            <form action="" class="flex flex-col gap-4">
+                <div class="flex flex-col">
+                    <label for="">Title</label>
+                    <input class="border rounded-sm py-1 px-2" type="text" name="" id="">
+                </div>
+                <div class="flex flex-col">
+                    <label for="">Priority</label>
+                    <select class="border rounded-sm py-1 px-2" name="" id="priority">
+                        <option value="High">High</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Low">Low</option>
+                    </select>
+                </div>
+                <div class="flex gap-4">
+                    <div class="flex flex-col w-full">
+                        <label for="">Date</label>
+                        <input class="border rounded-sm py-1 px-2" type="date" name="" id="">
+                    </div>
+                    <div class="flex flex-col w-full">
+                        <label for="">Time</label>
+                        <input class="border rounded-sm py-1 px-2" type="time" name="" id="">
+                    </div>
+                </div>
+                <div class="flex flex-col">
+                    <label for="">Description</label>
+                    <textarea class="border rounded-sm py-1 px-2" name="" id="" cols="30" rows="5"></textarea>
+                </div>
+                <div class="">
+                    <button class="bg-yellow-500 rounded-md p-2 text-white">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="/script/script.js"></script>
 </body>
+
 
 </html>

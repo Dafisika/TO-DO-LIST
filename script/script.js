@@ -20,6 +20,33 @@ function submitOngoingToDo() {
   formToDo.addEventListener("submit", (event) => {
     event.preventDefault();
 
+    const tittle = document.getElementById("tittle");
+    const tittleValue = tittle.value;
+    console.log(tittleValue);
+
+    localStorage.setItem("Userdata", tittle);
+    const saveData = localStorage.getItem("userData");
+    console.log(saveData);
+
+    // const saveData = localStorage.getItem(userData);
+    // saveData.innerText = saveData;
+
+    const priority = document.getElementById("priority");
+    const priorityValue = priority.value;
+    console.log(priorityValue);
+
+    const date = document.getElementById("date");
+    const dateValue = date.value;
+    console.log(dateValue);
+
+    const time = document.getElementById("time");
+    const timeValue = time.value;
+    console.log(timeValue);
+
+    const description = document.getElementById("description");
+    const descriptionValue = description.value;
+    console.log(descriptionValue);
+
     const closeModalWhileSubmit = document.getElementById("modal");
     closeModalWhileSubmit.classList.add("hidden");
 
@@ -46,5 +73,6 @@ function submitOngoingToDo() {
                       </div>
                   </div>`;
   });
-  console.log("jalan");
 }
+
+function saveData() {}

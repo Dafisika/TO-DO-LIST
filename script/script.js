@@ -1,90 +1,108 @@
 const add = document.getElementById("add");
-add.addEventListener("click", () => {
+const close = document.getElementById("closeModal");
+
+function resetForm() {
+  const title = document.getElementById("title");
+  const priority = document.getElementById("priority");
+  const date = document.getElementById("date");
+  const time = document.getElementById("time");
+  const description = document.getElementById("description");
+
+  title.value = "";
+  priority.value = "";
+  date.value = "";
+  time.value = "";
+  description.value = "";
+}
+
+function openModal() {
+  resetForm();
   window.scrollTo({ top: 0, behavior: "instant" });
   const addModal = document.querySelector("#modal");
   addModal.classList.remove("hidden");
   const disableScroll = document.querySelector("body");
   disableScroll.classList.add("overflow-hidden");
-});
-
-const close = document.getElementById("closeModal");
-close.addEventListener("click", () => {
+}
+function closeModal() {
   const closeModal = document.querySelector("#modal");
   closeModal.classList.add("hidden");
   const enableScroll = document.querySelector("body");
   enableScroll.classList.remove("overflow-hidden");
-});
+}
 
-function setAndGetValue(elementId, setItemKey) {
-  const getElement = document.getElementById(elementId);
-  const getElementValue = getElement.value;
-  localStorage.setItem(setItemKey, getElementValue);
-  const getData = localStorage.getItem(setItemKey);
-  return getData;
+function getDataInput() {
+  const title = document.getElementById("title");
+  const priority = document.getElementById("priority");
+  const date = document.getElementById("date");
+  const time = document.getElementById("time");
+  const description = document.getElementById("description");
+
+  const value = {
+    title: title.value,
+    priority: priority.value,
+    date: date.value,
+    time: time.value,
+    description: description.value,
+  };
+
+  return value;
+}
+
+function setValue(key, data) {
+  let dataArray = JSON.parse(localStorage.getItem(key)) || [];
+  dataArray.push(data);
+
+  console.log(dataArray);
+  localStorage.removeItem(key);
+  localStorage.setItem(key, JSON.stringify(dataArray));
+}
+
+function getValue(key) {
+  const data = JSON.parse(localStorage.getItem(key))
+    ? JSON.parse(localStorage.getItem(key))
+    : null;
+  return data;
 }
 
 function submitOngoingToDo() {
-  const formToDo = document.getElementById("formToDo");
-  formToDo.addEventListener("submit", (event) => {
-    event.preventDefault();
+  setValue("tododata", getDataInput());
+  resetForm();
+  closeModal();
+}
 
-    const title = setAndGetValue("title", "titleData");
-    console.log(title);
-    const priority = setAndGetValue("priority", "priorityData");
-    const date = setAndGetValue("date", "dateData");
-    const time = setAndGetValue("time", "timeData");
-    const description = setAndGetValue("description", "descriptionData");
+function priorityStyle(data) {
+  let priorityStyle = "";
+  if (data == "High") {
+    priorityStyle = "bg-red-700";
+  } else if (data == "Medium") {
+    priorityStyle = "bg-yellow-500";
+  } else if (data == "Low") {
+    priorityStyle = "bg-green-500";
+  }
+  return priorityStyle;
+}
 
-    let priorityStyle = "";
-    if (priority == "High") {
-      priorityStyle = "bg-red-700";
-    } else if (priority == "Medium") {
-      priorityStyle = "bg-yellow-500";
-    } else if (priority == "Low") {
-      priorityStyle = "bg-green-500";
-    }
+function fetchDataToDo() {
+  const ongoingToDo = document.getElementById("ongoingToDo");
+  const data = getValue("tododata");
 
-    // const arr = [];
-    // const arrPush = arr.push([
-    //   {
-    //     title: setAndGetValue("title", "titleData"),
-    //     priority: setAndGetValue("priority", "priorityData"),
-    //     date: setAndGetValue("date", "dateData"),
-    //     time: setAndGetValue("time", "timeData"),
-    //     description: setAndGetValue("description", "descriptionData"),
-    //   },
-    // ]);
-
-    // const dataArr = localStorage.setItem("data", { arrPush });
-    // const getDataArr = localStorage.getItem("data");
-    // console.log(JSON.stringify(getDataArr));
-
-    // const priority = document.getElementById("priority");
-    // const priorityValue = priority.value;
-    // console.log(priorityValue);
-
-    // const date = document.getElementById("date");
-    // const dateValue = date.value;
-
-    // const time = document.getElementById("time");
-    // const timeValue = time.value;
-
-    // const description = document.getElementById("description");
-    // const descriptionValue = description.value;
-
-    const closeModalWhileSubmit = document.getElementById("modal");
-    closeModalWhileSubmit.classList.add("hidden");
-
-    const enableScrollWhileSubmit = document.querySelector("body");
-    enableScrollWhileSubmit.classList.remove("overflow-hidden");
-
-    const ongoingToDo = document.getElementById("ongoingToDo");
-    ongoingToDo.innerHTML = ` <div class="">
+  const priority = ["High", "Medium", "Low"];
+  console.log(data);
+  data
+    .sort(function (a, b) {
+      let first = priority.indexOf(a.priority);
+      let second = priority.indexOf(b.priority);
+      return first - second;
+    })
+    .forEach((item, index) => {
+      ongoingToDo.innerHTML += `<div class="" id="${index}">
                     <input type="checkbox" class="w-5 h-5 blue-500">
-                    <div class="flex flex-col border-1 rounded-md p-2 ">
+                    <div class="flex flex-col border-1 rounded-md p-2 w-[300px] h-[350px] ">
                         <div class="flex justify-between items-center mb-4">
-                            <b class="text-xl font-DMSans">${title}</b>
-                            <p class="${priorityStyle} px-2">${priority}</p>
+                            <b class="text-xl font-DMSans">${item.title}</b>
+                            <p class="${priorityStyle(item.priority)} px-2">${
+        item.priority
+      }</p>
                         </div>
                         <div class="flex flex-col py-2 gap-4">
                             <div class="flex items-start gap-2">
@@ -96,9 +114,9 @@ function submitOngoingToDo() {
                                         <path fill="#808080" fill-rule="evenodd"
                                             d="M61,154.006845 C61,153.45078 61.4499488,153 62.0068455,153 L73.9931545,153 C74.5492199,153 75,153.449949 75,154.006845 L75,165.993155 C75,166.54922 74.5500512,167 73.9931545,167 L62.0068455,167 C61.4507801,167 61,166.550051 61,165.993155 L61,154.006845 Z M62,157 L74,157 L74,166 L62,166 L62,157 Z M64,152.5 C64,152.223858 64.214035,152 64.5046844,152 L65.4953156,152 C65.7740451,152 66,152.231934 66,152.5 L66,153 L64,153 L64,152.5 Z M70,152.5 C70,152.223858 70.214035,152 70.5046844,152 L71.4953156,152 C71.7740451,152 72,152.231934 72,152.5 L72,153 L70,153 L70,152.5 Z"
                                             transform="translate(-61 -152)"></path>
-                                    </g>
+                                    </g>300
                                 </svg>
-                                <p>${date}</p>
+                                <p>${item.date}</p>
                             </div>
                             <div class="flex items-center gap-2">
                                 <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"
@@ -114,20 +132,42 @@ function submitOngoingToDo() {
                                             fill="#808080"></path>
                                     </g>
                                 </svg>
-                                <p>${time}</p>
+                                <p>${item.time}</p>
                             </div>
 
                             <label for="">To Do:</label>
                             <textarea class="border rounded-md
-                        p-1" type="text" rows="4">${description}
+                        p-1" type="text" rows="4" readonly>${item.description}
                         </textarea>
                         </div>
                         <div class="flex flex-col gap-2 pt-2">
-                            <button class="border-1  bg-red-800 rounded-md text-white w-full">Delete</button>
+                            <button data-index="${index}" class="border-1 cursor-pointer hover:bg-black bg-red-800 rounded-md text-white w-full button-delete" >Delete</button>
                         </div>
                     </div>
                 </div>`;
-  });
+    });
 }
 
-function saveData() {}
+fetchDataToDo();
+function deleteData() {
+  const buttons = document.getElementsByClassName("button-delete");
+  console.log(buttons);
+  for (let i = 0; i < buttons.length; i++) {
+    buttons[i].addEventListener("click", () => {
+      const id = buttons[i].getAttribute("data-index");
+
+      console.log(id);
+    });
+  }
+
+  // let data = getValue("tododata");
+  // let dataIndex = data.indexOf(index);
+
+  // if (dataIndex !== -1) {
+  //   data.splice(dataIndex, 1);
+
+  //   localStorage.setItem(key, "");
+  // }
+}
+
+deleteData();

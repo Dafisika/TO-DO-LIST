@@ -58,8 +58,8 @@
                 </div>
             </div>
             <div class="">
-                <button id="add"
-                    class="bg-orange-400 rounded-md p-2 text-white cursor-pointer hover:bg-orange-500 ">Add</button>
+                <button id="add" class="bg-orange-400 rounded-md p-2 text-white cursor-pointer hover:bg-orange-500 "
+                    onclick="openModal()">Add</button>
             </div>
         </nav>
         <article class="">
@@ -77,7 +77,7 @@
                 </svg>
             </div>
 
-            <section id="ongoingToDo" class="grid grid-cols-4 shadow-xs shadow-purple-500/40 p-4 gap-5 mb-8">
+            <section id="ongoingToDo" class="flex overflow-x-scroll shadow-xs shadow-purple-500/40 p-4 gap-5 mb-8">
             </section>
 
             <div class="flex items-center bg-purple-700 rounded-t-md text-white p-2">
@@ -144,7 +144,7 @@
 
                             <label for="">To Do:</label>
                             <textarea class="border rounded-md
-                        p-4" type="text" rows="4">
+                        p-4" type="text" rows="4" readonly>
                             </textarea>
                         </div>
                         <div class="flex flex-col gap-2 pt-2">
@@ -242,7 +242,8 @@
                         p-4" type="text">
                         </div>
                         <div class="flex flex-col gap-2 pt-2">
-                            <button class="border-1  bg-red-800 rounded-md text-white w-full">Delete</button>
+                            <button id="delete"
+                                class="border-1  bg-red-800 rounded-md text-white w-full">Delete</button>
                         </div>
                     </div>
                 </div>

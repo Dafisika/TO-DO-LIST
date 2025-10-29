@@ -82,33 +82,53 @@ function priorityStyle(data) {
 function deleteData() {
   const buttons = document.getElementsByClassName("button-delete");
 
-  console.log(buttons);
   for (let i = 0; i < buttons.length; i++) {
     buttons[i].addEventListener("click", () => {
       const id = buttons[i].getAttribute("data-id");
       let data = getValue("tododata");
-      const deleteItem = data.indexOf(id);
-      console.log(deleteItem);
+
+      let changedData = data.find((item) => item.id == id);
+
+      const deleteItem = data.indexOf(changedData);
+
       data.splice(deleteItem, 1);
       localStorage.setItem("tododata", JSON.stringify(data));
       fetchDataToDo();
     });
   }
 }
+
 function moveToDoData() {
   const buttons = document.getElementsByClassName("button-done");
 
-  console.log(buttons);
   for (let i = 0; i < buttons.length; i++) {
     buttons[i].addEventListener("change", () => {
       const id = buttons[i].getAttribute("data-id");
       let data = getValue("tododata");
-      const indexItem = data.indexOf(id);
-      let dataDone = data.find((item) => item.id == id);
-      dataDone.isDone = true;
-      data.splice(indexItem, 1);
 
-      data.push(dataDone);
+      let changedData = data.find((item) => item.id == id);
+      changedData.isDone = true;
+
+      const index = data.indexOf(changedData);
+      data.splice(index, 1);
+
+      data.push(changedData);
+
+      // const indexItem = data.indexOf(id);
+
+      // let changedData = data;
+
+      // console.log(data);
+      // console.log(changedData);
+      // changedData = changedData.find((item) => item.id == id);
+      // changedData.isDone = true;
+      // changedData.id = id;
+
+      // console.log(changedData);
+      // data.splice(indexItem, 1);
+      // console.log(data);
+
+      // data.push(changedData);
       localStorage.setItem("tododata", JSON.stringify(data));
       fetchDataToDo();
       fetchDataDone();
@@ -121,7 +141,7 @@ function fetchDataDone() {
   const data = getValue("tododata");
   ongoingToDo.innerHTML = "";
   const priority = ["High", "Medium", "Low"];
-  console.log(data);
+
   data
     .filter((item) => item.isDone == true)
     .sort(function (a, b) {
@@ -188,7 +208,6 @@ function fetchDataToDo() {
   const data = getValue("tododata");
   ongoingToDo.innerHTML = "";
   const priority = ["High", "Medium", "Low"];
-  console.log(data);
   data
     .filter((item) => item.isDone == false)
     .sort(function (a, b) {
@@ -196,6 +215,12 @@ function fetchDataToDo() {
       let second = priority.indexOf(b.priority);
       return first - second;
     })
+    .sort(function (a, b) {
+      let first = new Date(a.date + "T" + a.time);
+      let second = new Date(b.date + "T" + b.time);
+      return new Date(first - second);
+    })
+
     .forEach((item, index) => {
       ongoingToDo.innerHTML += `<div class="" id="${index}">
                     <input type="checkbox" class="w-5 h-5 blue-500 button-done" data-id="${
@@ -257,13 +282,24 @@ function fetchDataToDo() {
   moveToDoData();
 }
 
-function submitOngoingToDo() {
+function deleteAllData() {
+  const getAllData = getValue("tododata");
+  localStorage.removeItem("tododata");
+  const ongoingData = getAllData.filter((item) => item.isDone == true);
+  localStorage.setItem("tododata", JSON.stringify(ongoingData));
+
+  fetchDataToDo();
+}
+
+const form = document.getElementById("formToDo");
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
   setValue("tododata", getDataInput(setId()));
   resetForm();
   closeModal();
   // location.reload();
   fetchDataToDo();
-}
+});
 
 fetchDataToDo();
 fetchDataDone();
